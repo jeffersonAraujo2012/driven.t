@@ -20,7 +20,7 @@ async function getAddressFromCEP(cep: string): Promise<ViaCEPAddress> {
     throw notFoundError();
   }
 
-  const { logradouro, complemento, bairro, localidade, uf } = address;
+  const { logradouro, complemento, bairro, uf } = address;
   return { logradouro, complemento, bairro, cidade: address.localidade, uf };
 }
 
