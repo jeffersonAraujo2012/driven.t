@@ -7,8 +7,10 @@ export type ViaCEPAddress = {
   logradouro: string;
   complemento: string;
   bairro: string;
-  localidade: string;
+  localidade?: string;
+  cidade?: string;
   uf: string;
+  erro?: boolean;
 };
 
 export type RequestError = {
@@ -18,3 +20,7 @@ export type RequestError = {
   name: string;
   message: string;
 };
+
+export type GetAddressFromCEPQuery = {
+  cep: string
+}
