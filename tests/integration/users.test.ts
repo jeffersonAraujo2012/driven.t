@@ -5,18 +5,26 @@ import supertest from 'supertest';
 import { createEvent, createUser } from '../factories';
 import { cleanDb } from '../helpers';
 import { duplicatedEmailError } from '@/services/users-service';
+<<<<<<< HEAD
 import app, { init, close } from '@/app';
 import { prisma } from '@/config';
+=======
+import { prisma } from '@/config';
+import app, { init } from '@/app';
+>>>>>>> 72ab463d0e240c1b816829a0566b4e4b2b461875
 
 beforeAll(async () => {
   await init();
   await cleanDb();
 });
 
+<<<<<<< HEAD
 afterAll(async () => {
   await close();
 });
 
+=======
+>>>>>>> 72ab463d0e240c1b816829a0566b4e4b2b461875
 const server = supertest(app);
 
 describe('POST /users', () => {

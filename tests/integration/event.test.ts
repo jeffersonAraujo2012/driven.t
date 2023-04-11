@@ -2,17 +2,24 @@ import httpStatus from 'http-status';
 import supertest from 'supertest';
 import { createEvent } from '../factories';
 import { cleanDb } from '../helpers';
+<<<<<<< HEAD
 import app, { init, close } from '@/app';
+=======
+import app, { init } from '@/app';
+>>>>>>> 72ab463d0e240c1b816829a0566b4e4b2b461875
 
 beforeAll(async () => {
   await init();
   await cleanDb();
 });
 
+<<<<<<< HEAD
 afterAll(async () => {
   await close();
 });
 
+=======
+>>>>>>> 72ab463d0e240c1b816829a0566b4e4b2b461875
 const server = supertest(app);
 
 describe('GET /event', () => {
