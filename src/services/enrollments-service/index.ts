@@ -1,11 +1,11 @@
 import { Address, Enrollment } from '@prisma/client';
+import { AxiosResponse } from 'axios';
 import { request } from '@/utils/request';
 import { invalidDataError, notFoundError } from '@/errors';
 import addressRepository, { CreateAddressParams } from '@/repositories/address-repository';
 import enrollmentRepository, { CreateEnrollmentParams } from '@/repositories/enrollment-repository';
 import { exclude } from '@/utils/prisma-utils';
 import { ViaCEPAddress } from '@/protocols';
-import { AxiosResponse } from 'axios';
 
 async function getAddressFromCEP(cep: string): Promise<ViaCEPAddress> {
   const result = (await request.get(`${process.env.VIA_CEP_API}/${cep}/json/`)) as AxiosResponse<ViaCEPAddress>;

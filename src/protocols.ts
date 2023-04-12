@@ -13,6 +13,15 @@ export type ViaCEPAddress = {
   erro?: boolean;
 };
 
+export type AddressEnrollment = {
+  logradouro: string;
+  complemento: string;
+  bairro: string;
+  cidade: string;
+  uf: string;
+  error?: string;
+};
+
 export type RequestError = {
   status: number;
   data: object | null;
@@ -22,5 +31,5 @@ export type RequestError = {
 };
 
 export type GetAddressFromCEPQuery = {
-  cep: string
-}
+  cep: string;
+};
