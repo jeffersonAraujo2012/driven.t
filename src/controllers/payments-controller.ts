@@ -10,7 +10,7 @@ async function payTicket(req: AuthenticatedRequest, res: Response, next: NextFun
 
   try {
     const paymentCreated = await paymentsService.payTicket({ ticketId, cardData, userId });
-    res.sendStatus(httpStatus.CREATED).send(paymentCreated);
+    res.status(httpStatus.OK).send(paymentCreated);
   } catch (error) {
     //next(error) //NOT WORKING
     handleApplicationErrors(error, req, res);
@@ -31,8 +31,6 @@ async function getPaymentByTicketId(req: AuthenticatedWithTicketIdQueryRequest, 
     const payment = await paymentsService.getPaymentByTicketId({ ticketId, userId });
     res.status(httpStatus.OK).send(payment);
   } catch (err) {
-    console.log('SIM, CAPTUREI UM ERRO!');
-    console.log('OLHA ELE AÍ: ' + err.name);
     //next(err); //NOT WORKING
     handleApplicationErrors(err, req, res);
   }

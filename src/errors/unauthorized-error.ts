@@ -7,13 +7,6 @@ export function unauthorizedError(): ApplicationError {
   };
 }
 
-export function unauthorizedPaymentError(): ApplicationError {
-  return {
-    name: 'UnauthorizedPaymentError',
-    message: 'You dont have tickets',
-  };
-}
-
 export function unauthorizedOwnerError(message: string): ApplicationError {
   return {
     name: 'UnauthorizedOwnerError',

@@ -3,7 +3,6 @@ import httpStatus from 'http-status';
 import { ApplicationError } from '@/protocols';
 
 export function handleApplicationErrors(err: ApplicationError | Error, _req: Request, res: Response) {
-  console.log('OI, algo deu errado e fui chamado');
   if (err.name === 'CannotEnrollBeforeStartDateError') {
     return res.status(httpStatus.BAD_REQUEST).send({
       message: err.message,
@@ -35,12 +34,6 @@ export function handleApplicationErrors(err: ApplicationError | Error, _req: Req
   }
 
   if (err.name === 'UnauthorizedOwnerError') {
-    return res.status(httpStatus.UNAUTHORIZED).send({
-      message: err.message,
-    });
-  }
-
-  if (err.name === 'unauthorizedPaymentError') {
     return res.status(httpStatus.UNAUTHORIZED).send({
       message: err.message,
     });

@@ -3,14 +3,24 @@ import { PaymentRequest } from '../../protocols';
 import { prisma } from '@/config';
 
 async function payTicket({ ticketId, ticket, cardData }: PaymentRequest): Promise<Payment> {
-  const paymentCreated = await prisma.payment.create({
-    data: {
-      cardIssuer: cardData.issuer,
-      value: ticket.TicketType.price,
-      cardLastDigits: cardData.number.toString().substring(16),
-      ticketId: ticketId,
-    },
-  });
+  const [paymentCreated] = await prisma.$transaction([
+    prisma.payment.create({
+      data: {
+        cardIssuer: cardData.issuer,
+        value: ticket.TicketType.price,
+        cardLastDigits: cardData.number.toString().slice(-4),
+        ticketId: ticketId,
+      },
+    }),
+    prisma.ticket.update({
+      where: {
+        id: ticketId,
+      },
+      data: {
+        status: 'PAID',
+      },
+    }),
+  ]);
 
   return paymentCreated;
 }
