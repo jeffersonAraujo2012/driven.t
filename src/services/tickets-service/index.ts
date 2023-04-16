@@ -14,7 +14,7 @@ async function getUserTicket(userId: number): Promise<TicketEntity> {
   if (!enrollment) throw notFoundError();
 
   const userTicket: TicketEntity = await ticketRepositories.getUserTicket(enrollment.id);
-  if (Object.keys(userTicket).length === 0) throw notFoundError();
+  if (!userTicket) throw notFoundError();
 
   return userTicket;
 }

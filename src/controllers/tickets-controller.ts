@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import httpStatus from 'http-status';
 
 import { CreateTicketRequest, TicketEntity, TicketTypeEntity } from '@/protocols';
@@ -12,17 +12,13 @@ export async function getTicketTypes(_req: Request, res: Response) {
   } catch (error) {}
 }
 
-export async function getUserTicket(req: AuthenticatedRequest, res: Response) {
+export async function getUserTicket(req: AuthenticatedRequest, res: Response, next: NextFunction) {
   const userId = req.userId;
   try {
     const getUserTicket: TicketEntity = await ticketService.getUserTicket(userId);
     res.status(httpStatus.OK).send(getUserTicket);
   } catch (error) {
-    if (error.name === 'NotFoundError') {
-      res.status(httpStatus.NOT_FOUND).send(error.message);
-    } else {
-      res.status(httpStatus.INTERNAL_SERVER_ERROR).send(error.message);
-    }
+    next(error);
   }
 }
 

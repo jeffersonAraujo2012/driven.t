@@ -1,8 +1,8 @@
 import { NextFunction, Response } from 'express';
 import httpStatus from 'http-status';
-import { AuthenticatedRequest, handleApplicationErrors } from '@/middlewares';
+import { AuthenticatedRequest } from '@/middlewares';
 import paymentsService from '@/services/payments-service';
-import { GetPaymentByTicketIdRequest, PaymentRequest } from '@/protocols';
+import { PaymentRequest } from '@/protocols';
 
 async function payTicket(req: AuthenticatedRequest, res: Response, next: NextFunction) {
   const userId = req.userId;
@@ -12,8 +12,7 @@ async function payTicket(req: AuthenticatedRequest, res: Response, next: NextFun
     const paymentCreated = await paymentsService.payTicket({ ticketId, cardData, userId });
     res.status(httpStatus.OK).send(paymentCreated);
   } catch (error) {
-    //next(error) //NOT WORKING
-    handleApplicationErrors(error, req, res);
+    next(error);
   }
 }
 
@@ -31,8 +30,7 @@ async function getPaymentByTicketId(req: AuthenticatedWithTicketIdQueryRequest, 
     const payment = await paymentsService.getPaymentByTicketId({ ticketId, userId });
     res.status(httpStatus.OK).send(payment);
   } catch (err) {
-    //next(err); //NOT WORKING
-    handleApplicationErrors(err, req, res);
+    next(err);
   }
 }
 
