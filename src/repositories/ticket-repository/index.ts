@@ -1,5 +1,6 @@
 import { Prisma } from '.prisma/client';
 import { prisma } from '@/config';
+import { CreateTicketParams } from '@/controllers/tickets-controller';
 import { TicketEntity, TicketTypeEntity } from '@/protocols';
 
 async function getTicketTypes(): Promise<TicketTypeEntity[]> {
@@ -36,9 +37,45 @@ async function getUserTicket(enrollmentId: number): Promise<TicketEntity> {
   return userTicket;
 }
 
+type CreateTicketRepositoryParams = Pick<CreateTicketParams, 'ticketTypeId' | 'enrollmentId'>;
+
+async function createTicket(createTicketParams: CreateTicketRepositoryParams): Promise<TicketEntity> {
+  const { ticketTypeId, enrollmentId } = createTicketParams;
+
+  const ticketCreated = await prisma.ticket.create({
+    data: {
+      status: 'RESERVED',
+      enrollmentId: enrollmentId,
+      ticketTypeId: ticketTypeId,
+    },
+    select: {
+      id: true,
+      status: true, //RESERVED | PAID
+      ticketTypeId: true,
+      enrollmentId: true,
+      TicketType: {
+        select: {
+          id: true,
+          name: true,
+          price: true,
+          isRemote: true,
+          includesHotel: true,
+          createdAt: true,
+          updatedAt: true,
+        },
+      },
+      createdAt: true,
+      updatedAt: true,
+    },
+  });
+
+  return ticketCreated;
+}
+
 const ticketRepositories = {
   getTicketTypes,
   getUserTicket,
+  createTicket,
 };
 
 export default ticketRepositories;

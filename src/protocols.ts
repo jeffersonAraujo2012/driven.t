@@ -63,3 +63,7 @@ export type TicketEntity = {
   createdAt: Date;
   updatedAt: Date;
 };
+
+export type CreateTicketRequest = {
+  ticketTypeId: number;
+};
