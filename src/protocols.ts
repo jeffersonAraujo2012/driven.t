@@ -1,6 +1,3 @@
-import { Ticket } from '.prisma/client';
-import { Request } from 'express';
-
 export type ApplicationError = {
   name: string;
   message: string;
