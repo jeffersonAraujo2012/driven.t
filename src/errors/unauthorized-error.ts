@@ -6,3 +6,10 @@ export function unauthorizedError(): ApplicationError {
     message: 'You must be signed in to continue',
   };
 }
+
+export function unauthorizedPaymentError(): ApplicationError {
+  return {
+    name: 'UnauthorizedPaymentError',
+    message: 'You dont have tickets',
+  };
+}

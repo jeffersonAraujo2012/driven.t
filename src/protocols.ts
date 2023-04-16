@@ -1,3 +1,4 @@
+import { Ticket } from '.prisma/client';
 import { Request } from 'express';
 
 export type ApplicationError = {
@@ -66,4 +67,18 @@ export type TicketEntity = {
 
 export type CreateTicketRequest = {
   ticketTypeId: number;
+};
+
+export type CardData = {
+  issuer: string;
+  number: number;
+  name: string;
+  expirationDate: Date;
+  cvv: number;
+};
+
+export type PaymentRequest = {
+  ticketId: number;
+  ticket?: TicketEntity;
+  cardData: CardData;
 };
