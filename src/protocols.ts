@@ -82,3 +82,7 @@ export type PaymentRequest = {
   ticket?: TicketEntity;
   cardData: CardData;
 };
+
+export type GetPaymentByTicketIdRequest = {
+  ticketId: number;
+};

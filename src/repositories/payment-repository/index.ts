@@ -15,8 +15,19 @@ async function payTicket({ ticketId, ticket, cardData }: PaymentRequest): Promis
   return paymentCreated;
 }
 
+async function getPaymentByTicketId(ticketId: number): Promise<Payment> {
+  const payment = await prisma.payment.findFirst({
+    where: {
+      ticketId: ticketId,
+    },
+  });
+
+  return payment;
+}
+
 const paymentRepositories = {
   payTicket,
+  getPaymentByTicketId,
 };
 
 export default paymentRepositories;
