@@ -5,8 +5,7 @@ import enrollmentRepository from '@/repositories/enrollment-repository';
 import ticketRepositories from '@/repositories/ticket-repository';
 
 async function getTicketTypes(): Promise<TicketTypeEntity[]> {
-  const ticketTypes: TicketTypeEntity[] = await ticketRepositories.getTicketTypes();
-  return ticketTypes;
+  return ticketRepositories.getTicketTypes();
 }
 
 async function getUserTicket(userId: number): Promise<TicketEntity> {

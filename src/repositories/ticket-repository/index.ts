@@ -9,7 +9,7 @@ async function getTicketTypes(): Promise<TicketTypeEntity[]> {
 }
 
 async function getUserTicket(enrollmentId: number): Promise<TicketEntity> {
-  const userTicket = await prisma.ticket.findFirst({
+  return prisma.ticket.findFirst({
     where: {
       enrollmentId: enrollmentId,
     },
@@ -33,12 +33,10 @@ async function getUserTicket(enrollmentId: number): Promise<TicketEntity> {
       updatedAt: true,
     },
   });
-
-  return userTicket;
 }
 
 async function getTicketById(ticketId: number): Promise<TicketEntity> {
-  const ticket = await prisma.ticket.findUnique({
+  return prisma.ticket.findUnique({
     where: {
       id: ticketId,
     },
@@ -62,8 +60,6 @@ async function getTicketById(ticketId: number): Promise<TicketEntity> {
       updatedAt: true,
     },
   });
-
-  return ticket;
 }
 
 type CreateTicketRepositoryParams = Pick<CreateTicketParams, 'ticketTypeId' | 'enrollmentId'>;
@@ -71,7 +67,7 @@ type CreateTicketRepositoryParams = Pick<CreateTicketParams, 'ticketTypeId' | 'e
 async function createTicket(createTicketParams: CreateTicketRepositoryParams): Promise<TicketEntity> {
   const { ticketTypeId, enrollmentId } = createTicketParams;
 
-  const ticketCreated = await prisma.ticket.create({
+  return prisma.ticket.create({
     data: {
       status: 'RESERVED',
       enrollmentId: enrollmentId,
@@ -97,8 +93,6 @@ async function createTicket(createTicketParams: CreateTicketRepositoryParams): P
       updatedAt: true,
     },
   });
-
-  return ticketCreated;
 }
 
 const ticketRepositories = {

@@ -35,9 +35,7 @@ async function getPaymentByTicketId({ ticketId, userId }: GetPaymentByTicketId):
   const enrollment = await enrollmentRepository.findWithAddressByUserId(userId);
   if (ticket.enrollmentId !== enrollment.id) throw unauthorizedOwnerError('You must be the ticket owner');
 
-  const payment = await paymentRepositories.getPaymentByTicketId(ticketId);
-
-  return payment;
+  return paymentRepositories.getPaymentByTicketId(ticketId);
 }
 
 const paymentsService = {
