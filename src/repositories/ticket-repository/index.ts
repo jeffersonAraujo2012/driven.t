@@ -1,4 +1,3 @@
-import { Prisma, Ticket } from '.prisma/client';
 import { prisma } from '@/config';
 import { CreateTicketParams } from '@/controllers/tickets-controller';
 import { TicketEntity, TicketTypeEntity } from '@/protocols';
