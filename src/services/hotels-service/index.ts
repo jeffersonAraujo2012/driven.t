@@ -18,8 +18,25 @@ async function getHotels(userId: number) {
   return hotels;
 }
 
+type GetRoomsByHotelIdParams = { userId: number; hotelId: number };
+
+async function getHotelWithRoomsByHotelId({ userId, hotelId }: GetRoomsByHotelIdParams) {
+  const enrollment = await enrollmentRepository.findWithAddressByUserId(userId);
+  const ticket = await ticketService.getUserTicket(userId);
+  const hotel = await hotelsRepositories.findWithRoomsById(hotelId);
+
+  if (!enrollment || !ticket) throw notFoundError();
+  if (ticket.TicketType.isRemote) throw paymentRequired('Ticket is remote');
+  if (ticket.status !== 'PAID') throw paymentRequired('Ticket is not paid');
+  if (!ticket.TicketType.includesHotel) throw paymentRequired('Ticket does not include hotel');
+  if (!hotel) throw notFoundError();
+
+  return hotel;
+}
+
 const hotelsService = {
   getHotels,
+  getHotelWithRoomsByHotelId,
 };
 
 export default hotelsService;
