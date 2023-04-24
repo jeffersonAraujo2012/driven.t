@@ -11,7 +11,10 @@ async function getHotels(userId: number) {
 
   if (!enrollment || !ticket || hotels.length === 0) throw notFoundError();
   if (ticket.TicketType.isRemote) throw paymentRequired('Ticket is remote');
+  if (ticket.status !== 'PAID') throw paymentRequired('Ticket is not paid');
   if (!ticket.TicketType.includesHotel) throw paymentRequired('Ticket does not include hotel');
+
+  return hotels;
 }
 
 const hotelsService = {

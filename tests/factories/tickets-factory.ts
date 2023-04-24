@@ -21,8 +21,8 @@ export async function createCustomTicketType(ticketType: CustomTicketType) {
     data: {
       name: name || faker.name.findName(),
       price: price || faker.datatype.number(),
-      isRemote: isRemote || faker.datatype.boolean(),
-      includesHotel: includesHotel || faker.datatype.boolean(),
+      isRemote: !!isRemote,
+      includesHotel: !!includesHotel,
     },
   });
 }

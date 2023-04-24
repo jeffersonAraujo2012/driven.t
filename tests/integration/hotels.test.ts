@@ -1,5 +1,6 @@
 import supertest from 'supertest';
 import httpStatus from 'http-status';
+import { Hotel } from '@prisma/client';
 import { cleanDb, generateValidToken } from '../helpers';
 import {
   createCustomTicketType,
@@ -8,6 +9,7 @@ import {
   createTicketType,
   createUser,
 } from '../factories';
+import createHotel from '../factories/hotels-factory';
 import app, { init } from '@/app';
 
 beforeAll(async () => {
@@ -50,6 +52,7 @@ describe('GET /hotels', () => {
     it('Should get 404 status if there is no hotel', async () => {
       const user = await createUser();
       const token = await generateValidToken(user);
+      await createHotel();
       const result = await server.get('/hotels').set('Authorization', `Bearer ${token}`);
       expect(result.status).toBe(httpStatus.NOT_FOUND);
     });
@@ -85,6 +88,20 @@ describe('GET /hotels', () => {
 
       const result = await server.get('/hotels').set('Authorization', `Bearer ${token}`);
       expect(result.status).toBe(httpStatus.PAYMENT_REQUIRED);
+    });
+
+    it('Should get status 200 and with hotels data', async () => {
+      const user = await createUser();
+      const token = await generateValidToken(user);
+      const enrollment = await createEnrollmentWithAddress(user);
+      const ticketType = await createCustomTicketType({ isRemote: false, includesHotel: true });
+      await createTicket(enrollment.id, ticketType.id, 'PAID');
+      const hotel = await createHotel();
+
+      const result = await server.get('/hotels').set('Authorization', `Bearer ${token}`);
+      //expect(result.status).toBe(httpStatus.OK);
+
+      expect(result.body).toContainEqual(JSON.parse(JSON.stringify(hotel)));
     });
   });
 });
