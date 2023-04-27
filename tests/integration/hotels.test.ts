@@ -10,10 +10,15 @@ import {
   createUser,
 } from '../factories';
 import createHotel from '../factories/hotels-factory';
+import createRooms from '../factories/rooms-factory';
 import app, { init } from '@/app';
 
 beforeAll(async () => {
   await init();
+});
+
+beforeEach(async () => {
+  await cleanDb();
 });
 
 afterAll(async () => {
@@ -104,7 +109,7 @@ describe('GET /hotels', () => {
       const result = await server.get('/hotels').set('Authorization', `Bearer ${token}`);
       //expect(result.status).toBe(httpStatus.OK);
 
-      expect(result.body).toContainEqual(JSON.parse(JSON.stringify(hotel)));
+      expect(result.body).toContainEqual(hotel);
     });
   });
 });
@@ -189,11 +194,15 @@ describe('GET /hotels/:hotelId', () => {
       const ticketType = await createCustomTicketType({ isRemote: false, includesHotel: true });
       await createTicket(enrollment.id, ticketType.id, 'PAID');
       const hotel = await createHotel();
+      const rooms = await createRooms(hotel.id);
 
       const result = await server.get(`/hotels/${hotel.id}`).set('Authorization', `Bearer ${token}`);
       //expect(result.status).toBe(httpStatus.OK);
 
-      expect(result.body).toContainEqual(JSON.parse(JSON.stringify(hotel)));
+      expect(result.body).toEqual({
+        ...hotel,
+        Rooms: [rooms],
+      });
     });
   });
 });
