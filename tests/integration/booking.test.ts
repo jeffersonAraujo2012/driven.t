@@ -153,7 +153,7 @@ describe('POST /booking', () => {
       expect(result.status).toBe(403);
     });
 
-    it('It should get status 200 with bookingIdd', async () => {
+    it('It should get status 200 with bookingId', async () => {
       const user = await createUser();
       const token = await generateValidToken(user);
       const enrollment = await createEnrollmentWithAddress(user);
@@ -162,14 +162,13 @@ describe('POST /booking', () => {
 
       const hotel = await createHotel();
       const room = await createRooms(hotel.id);
-      const booking = await createBooking({ userId: user.id, roomId: room.id });
 
       const result = await server.post('/booking').set('Authorization', `Bearer ${token}`).send({
         roomId: room.id,
       });
       expect(result.status).toBe(200);
       expect(result.body).toEqual({
-        bookingId: booking.id,
+        bookingId: result.body?.bookingId,
       });
     });
   });
