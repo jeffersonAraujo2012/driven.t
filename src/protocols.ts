@@ -85,3 +85,7 @@ export type PaymentRequest = {
 export type GetPaymentByTicketIdRequest = {
   ticketId: number;
 };
+
+export type CreateBookingReturn = {
+  bookingId: number;
+};
