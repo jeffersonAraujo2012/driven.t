@@ -1,6 +1,6 @@
 import { Booking, Room } from '@prisma/client';
 import { prisma } from '@/config';
-import { CreateBookingReturn } from '@/protocols';
+import { CreateOrChangeBookingReturn } from '@/protocols';
 
 type UserBookingWithRoomProps = {
   id: number;
@@ -27,12 +27,20 @@ async function getBookingsByRoomId(roomId: number): Promise<Booking[]> {
   });
 }
 
+async function getBookingsByUserId(userId: number): Promise<Booking> {
+  return prisma.booking.findFirst({
+    where: {
+      userId: userId,
+    },
+  });
+}
+
 type CreateBookingParams = {
   userId: number;
   roomId: number;
 };
 
-async function createBooking({ userId, roomId }: CreateBookingParams): Promise<CreateBookingReturn> {
+async function createBooking({ userId, roomId }: CreateBookingParams): Promise<CreateOrChangeBookingReturn> {
   const { id } = await prisma.booking.create({
     data: {
       userId: userId,
@@ -44,10 +52,30 @@ async function createBooking({ userId, roomId }: CreateBookingParams): Promise<C
   };
 }
 
+type ChangeBookingParams = CreateBookingParams & {
+  bookingId: number;
+};
+
+async function changeBooking({ bookingId, userId, roomId }: ChangeBookingParams): Promise<CreateOrChangeBookingReturn> {
+  const { id } = await prisma.booking.update({
+    where: {
+      id: bookingId,
+    },
+    data: {
+      roomId: roomId,
+    },
+  });
+  return {
+    bookingId: id,
+  };
+}
+
 const bookingsRepositories = {
   getUserBookingWithRoom,
   getBookingsByRoomId,
+  getBookingsByUserId,
   createBooking,
+  changeBooking,
 };
 
 export default bookingsRepositories;

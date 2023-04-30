@@ -1,5 +1,5 @@
 import { forbiddenError, notFoundError } from '@/errors';
-import { CreateBookingReturn } from '@/protocols';
+import { CreateOrChangeBookingReturn } from '@/protocols';
 import bookingsRepositories from '@/repositories/booking-repository';
 import enrollmentRepository from '@/repositories/enrollment-repository';
 import roomsRepositories from '@/repositories/room-repository';
@@ -11,12 +11,12 @@ async function getUserBookingWithRoom(userId: number) {
   return booking;
 }
 
-type CreateBookingParams = {
+type CreateOrChangeBookingParams = {
   userId: number;
   roomId: number;
 };
 
-async function createBooking({ userId, roomId }: CreateBookingParams): Promise<CreateBookingReturn> {
+async function createBooking({ userId, roomId }: CreateOrChangeBookingParams): Promise<CreateOrChangeBookingReturn> {
   const enrollment = await enrollmentRepository.findWithAddressByUserId(userId);
   if (!enrollment) throw forbiddenError('User has not enrollment');
 
@@ -46,9 +46,23 @@ async function createBooking({ userId, roomId }: CreateBookingParams): Promise<C
   return bookingsRepositories.createBooking({ userId, roomId });
 }
 
+async function changeBooking({ userId, roomId }: CreateOrChangeBookingParams): Promise<CreateOrChangeBookingReturn> {
+  const booking = await bookingsRepositories.getBookingsByUserId(userId);
+  if (!booking) throw forbiddenError('You has not a booking');
+
+  const room = await roomsRepositories.getRoomById(roomId);
+  if (!room) throw notFoundError();
+
+  const bookingsRoom = await bookingsRepositories.getBookingsByRoomId(room.id);
+  if (room.capacity === bookingsRoom.length) throw forbiddenError(`Room has not capacity`);
+
+  return bookingsRepositories.changeBooking({ bookingId: booking.id, roomId, userId });
+}
+
 const bookingsService = {
   getUserBookingWithRoom,
   createBooking,
+  changeBooking,
 };
 
 export default bookingsService;
