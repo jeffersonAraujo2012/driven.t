@@ -187,8 +187,9 @@ describe('PUT /booking/:bookingId', () => {
 
       const hotel = await createHotel();
       const room = await createRooms(hotel.id);
+      const booking = await createBooking({ userId: user.id, roomId: room.id });
 
-      const result = await server.put('/booking').set('Authorization', `Bearer ${token}`).send({
+      const result = await server.put(`/booking/${booking.id}`).set('Authorization', `Bearer ${token}`).send({
         roomId: room.id,
       });
       expect(result.status).toBe(403);
@@ -204,14 +205,14 @@ describe('PUT /booking/:bookingId', () => {
       const hotel = await createHotel();
       const room = await createRooms(hotel.id);
       const newRoom = await createRooms(hotel.id);
-      await createBooking({ userId: user.id, roomId: room.id });
+      const booking = await createBooking({ userId: user.id, roomId: room.id });
 
       for (let i = 0; i < newRoom.capacity; i++) {
         const otherUser = await createUser();
         await createBooking({ userId: otherUser.id, roomId: newRoom.id });
       }
 
-      const result = await server.put('/booking').set('Authorization', `Bearer ${token}`).send({
+      const result = await server.put(`/booking/${booking.id}`).set('Authorization', `Bearer ${token}`).send({
         roomId: newRoom.id,
       });
       expect(result.status).toBe(403);
@@ -226,9 +227,9 @@ describe('PUT /booking/:bookingId', () => {
 
       const hotel = await createHotel();
       const room = await createRooms(hotel.id);
-      await createBooking({ userId: user.id, roomId: room.id });
+      const booking = await createBooking({ userId: user.id, roomId: room.id });
 
-      const result = await server.put('/booking').set('Authorization', `Bearer ${token}`).send({
+      const result = await server.put(`/booking/${booking.id}`).set('Authorization', `Bearer ${token}`).send({
         roomId: 0,
       });
       expect(result.status).toBe(404);
@@ -246,7 +247,7 @@ describe('PUT /booking/:bookingId', () => {
       const newRoom = await createRooms(hotel.id);
       const booking = await createBooking({ userId: user.id, roomId: room.id });
 
-      const result = await server.put('/booking').set('Authorization', `Bearer ${token}`).send({
+      const result = await server.put(`/booking/${booking.id}`).set('Authorization', `Bearer ${token}`).send({
         roomId: newRoom.id,
       });
       expect(result.status).toBe(200);
