@@ -180,6 +180,7 @@ describe('PUT /booking/:bookingId', () => {
   describe('If token is valid', () => {
     it('It should get status 403 if user has no booking', async () => {
       const user = await createUser();
+      const otherUser = await createUser();
       const token = await generateValidToken(user);
       const enrollment = await createEnrollmentWithAddress(user);
       const ticketType = await createCustomTicketType({ isRemote: false, includesHotel: true });
@@ -187,7 +188,7 @@ describe('PUT /booking/:bookingId', () => {
 
       const hotel = await createHotel();
       const room = await createRooms(hotel.id);
-      const booking = await createBooking({ userId: user.id, roomId: room.id });
+      const booking = await createBooking({ userId: otherUser.id, roomId: room.id });
 
       const result = await server.put(`/booking/${booking.id}`).set('Authorization', `Bearer ${token}`).send({
         roomId: room.id,

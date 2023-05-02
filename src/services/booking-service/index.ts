@@ -46,9 +46,13 @@ async function createBooking({ userId, roomId }: CreateOrChangeBookingParams): P
   return bookingsRepositories.createBooking({ userId, roomId });
 }
 
-async function changeBooking({ userId, roomId }: CreateOrChangeBookingParams): Promise<CreateOrChangeBookingReturn> {
+type ChangeBookingParams = CreateOrChangeBookingParams & {
+  bookingId: number;
+};
+
+async function changeBooking({ bookingId, userId, roomId }: ChangeBookingParams): Promise<CreateOrChangeBookingReturn> {
   const booking = await bookingsRepositories.getBookingsByUserId(userId);
-  if (!booking) throw forbiddenError('You has not a booking');
+  if (!booking || booking.id !== bookingId) throw forbiddenError('You has not a booking');
 
   const room = await roomsRepositories.getRoomById(roomId);
   if (!room) throw notFoundError();
